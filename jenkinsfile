@@ -1,11 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        // Définissez ici les variables d'environnement nécessaires
-        // Par exemple, SONARQUBE_SCANNER_HOME si nécessaire
-    }
-
+    // Commentez ou supprimez cette section si vous n'avez pas de variables d'environnement spécifiques à définir
+   
     stages {
         stage('Checkout') {
             steps {
@@ -28,7 +25,6 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Si vous avez un token SonarQube, vous pouvez le configurer ici
                     withSonarQubeEnv('SonarQube_server') {
                         sh 'sonar-scanner'
                     }
@@ -53,21 +49,19 @@ pipeline {
     post {
         always {
             echo 'La pipeline est terminée.'
+            script {
+                // Vérifiez la qualité du code avec SonarQube après les étapes de build
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error "Échec de la qualité du code selon les critères de SonarQube."
+                }
+            }
         }
         success {
             echo 'Succès!'
         }
         failure {
             echo 'Échec!'
-        }
-        // Étape optionnelle pour vérifier la qualité du code
-        qualityGate: {
-            steps {
-                script {
-                    // Cette étape échouera si la qualité du code ne répond pas aux critères définis dans SonarQube
-                    waitForQualityGate abortPipeline: true
-                }
-            }
         }
     }
 }
