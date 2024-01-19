@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Si vous avez un token SonarQube, vous pouvez le configurer ici
-                    withSonarQubeEnv('sonar_server') {
+                    withSonarQubeEnv('SonarQube_server') {
                         sh 'sonar-scanner'
                     }
                 }
