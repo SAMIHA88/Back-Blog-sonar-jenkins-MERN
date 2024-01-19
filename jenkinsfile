@@ -3,42 +3,47 @@ pipeline {
 
     environment {
         // Définissez ici les variables d'environnement nécessaires
+        // Par exemple, SONARQUBE_SCANNER_HOME si nécessaire
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Récupère le code depuis le dépôt GitHub
                 git url: 'https://github.com/SAMIHA88/Back-Blog-sonar-jenkins-MERN.git', branch: 'master'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Installe les dépendances Node.js
                 sh 'npm install'
             }
         }
 
         stage('Test') {
             steps {
-                // Exécute les tests
                 sh 'npm test'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Si vous avez un token SonarQube, vous pouvez le configurer ici
+                    withSonarQubeEnv('sonar_server') {
+                        sh 'sonar-scanner'
+                    }
+                }
             }
         }
 
         stage('Build') {
             steps {
-                // Construit l'application, si nécessaire
                 sh 'npm run build'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Ajoutez ici vos étapes de déploiement
-                // Par exemple, vous pourriez copier les fichiers vers un serveur
-                // ou utiliser un outil de déploiement
                 echo 'Déploiement de l\'application...'
                 // sh 'votre-commande-de-deploiement'
             }
@@ -47,16 +52,22 @@ pipeline {
 
     post {
         always {
-            // Actions à effectuer après les étapes, comme le nettoyage
             echo 'La pipeline est terminée.'
         }
         success {
-            // Actions en cas de succès de la pipeline
             echo 'Succès!'
         }
         failure {
-            // Actions en cas d'échec de la pipeline
             echo 'Échec!'
+        }
+        // Étape optionnelle pour vérifier la qualité du code
+        qualityGate: {
+            steps {
+                script {
+                    // Cette étape échouera si la qualité du code ne répond pas aux critères définis dans SonarQube
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
     }
 }
