@@ -1,8 +1,6 @@
 pipeline {
     agent any
 
-    // Commentez ou supprimez cette section si vous n'avez pas de variables d'environnement spécifiques à définir
-   
     stages {
         stage('Checkout') {
             steps {
@@ -12,13 +10,15 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                // Utilisez 'bat' au lieu de 'sh' pour exécuter des commandes dans Windows
+                bat 'npm install'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test'
+                // Utilisez 'bat' pour exécuter les tests
+                bat 'npm test'
             }
         }
 
@@ -26,7 +26,8 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube_server') {
-                        sh 'sonar-scanner'
+                        // Assurez-vous que sonar-scanner est configuré et accessible sur Windows
+                        bat 'sonar-scanner'
                     }
                 }
             }
@@ -34,14 +35,16 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                // Utilisez 'bat' pour construire votre application
+                bat 'npm run build'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Déploiement de l\'application...'
-                // sh 'votre-commande-de-deploiement'
+                // Utilisez 'bat' pour les commandes de déploiement si nécessaire
+                // bat 'votre-commande-de-deploiement'
             }
         }
     }
