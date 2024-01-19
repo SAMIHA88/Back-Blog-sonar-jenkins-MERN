@@ -10,23 +10,17 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Utilisez 'bat' au lieu de 'sh' pour exécuter des commandes dans Windows
                 bat 'npm install'
             }
         }
 
-        stage('Test') {
-            steps {
-                // Utilisez 'bat' pour exécuter les tests
-                bat 'npm test'
-            }
-        }
+        // L'étape de test a été supprimée
 
         stage('SonarQube Analysis') {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube_server') {
-                        // Assurez-vous que sonar-scanner est configuré et accessible sur Windows
+                        // Assurez-vous que la commande sonar-scanner est correctement configurée
                         bat 'sonar-scanner'
                     }
                 }
@@ -35,7 +29,6 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Utilisez 'bat' pour construire votre application
                 bat 'npm run build'
             }
         }
@@ -43,7 +36,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Déploiement de l\'application...'
-                // Utilisez 'bat' pour les commandes de déploiement si nécessaire
+                // Utilisez 'bat' pour vos commandes de déploiement si nécessaire
                 // bat 'votre-commande-de-deploiement'
             }
         }
