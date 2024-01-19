@@ -1,0 +1,7 @@
+organization=amellalzakaria
+projectKey=amellalzakaria_blog
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.51767
+dashboardUrl=https://sonarcloud.io/dashboard?id=amellalzakaria_blog
+ceTaskId=AYzBCwmvCNsYyHKtBCiA
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AYzBCwmvCNsYyHKtBCiA
